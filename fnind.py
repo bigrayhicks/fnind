@@ -10,10 +10,34 @@ import json
 import urllib.request, urllib.parse
 import random
 import sys
+import os
+import datetime
 sys.path.append('./assets')
 from useragents import *
 
-def searchG(searchfor):
+# Global Variables
+resultdata = 0
+
+# Main Functions
+
+# getToday gets the date
+def getToday():
+        return datetime.date.today().strftime("%Y%m%d")
+
+
+# htmlout spits out an html report with the results of the search
+def htmlout(searcheditem,totalresults):
+  outpath = os.path.expanduser('~')+'/'
+  filename = "%s.%s" % (getToday(), "html")
+  htmlfile = open(outpath+filename,'w+')
+  htmlstr = '<!DOCTYPE HTML><head><title>report for' + searcheditem + '</title></head>'
+  htmlstr = htmlstr + '''<body><div style="margin:10px;width:80%;font-family:monospace"><h2>Total Hits: '''+ totalresults + '''</h2>'''
+  htmlfile.write(htmlstr)
+  htmlfile.close()
+  print('Report created in your home directory as %s' % filename)
+
+# searchG searches Google using Google's API
+def searchG(searchfor,resultdata=resultdata):
     searchlist.append(searchfor)
     for terms in searchlist:
         randomuseragent = singlerando(useragents) # select a random user agent from list
@@ -28,17 +52,15 @@ def searchG(searchfor):
         results = json.loads(search_results)
         data = results['responseData']
         if terms == searchfor:
-            print('Total results: %s' % data['cursor']['estimatedResultCount'])
-        hits = data['results']
-
-        if terms == searchfor:
-            print('Top %d hits:' % len(hits))
-            for h in hits: print(' ', h['url'])
-            print('For more results, see %s' % data['cursor']['moreResultsUrl'])
-            resultdata = 0
-            if len(hits > 0):
-              resultdata = 1
-        return resultdata
+          totalhits = data['cursor']['estimatedResultCount']
+          print('Total results: %s' % totalhits)
+          hits = data['results']
+          print('Top %d hits:' % len(hits))
+          for h in hits: print(' ', h['url'])
+          print('For more results, see %s' % data['cursor']['moreResultsUrl'])
+          if int(totalhits) > 0:
+            resultdata = 1
+          return resultdata,totalhits
 
 # global dictionary list of terms - do not change
 diction = []
@@ -80,5 +102,10 @@ elif (real_search == '')&(searchtype == 1):
   real_search = 'jamescampbell.us'
 
 gogetit = searchG(real_search)
-if gogetit == 1:
+if gogetit[0] == 1:
   reportstyle = (input('You have results, would you like an html report? (y/n): '))
+  if reportstyle == 'y':
+    htmlout(real_search,gogetit[1])
+  else:
+    print('----------\nFnind Report Version 1.1\n\n----------\nTotal hits: %s\n' % (hits,))
+    exit('Goodbye')
