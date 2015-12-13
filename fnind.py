@@ -30,10 +30,15 @@ def searchG(searchfor):
         if terms == searchfor:
             print('Total results: %s' % data['cursor']['estimatedResultCount'])
         hits = data['results']
+
         if terms == searchfor:
             print('Top %d hits:' % len(hits))
             for h in hits: print(' ', h['url'])
             print('For more results, see %s' % data['cursor']['moreResultsUrl'])
+            resultdata = 0
+            if len(hits > 0):
+              resultdata = 1
+        return resultdata
 
 # global dictionary list of terms - do not change
 diction = []
@@ -74,4 +79,6 @@ elif (real_search == '')&(searchtype == 1):
   print('Since search blank, example running jamescampbell.us')
   real_search = 'jamescampbell.us'
 
-searchG(real_search)
+gogetit = searchG(real_search)
+if gogetit == 1:
+  reportstyle = (input('You have results, would you like an html report? (y/n): '))
