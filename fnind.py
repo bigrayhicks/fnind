@@ -9,6 +9,9 @@
 import json
 import urllib.request, urllib.parse
 import random
+import sys
+sys.path.append('./assets')
+from useragents import *
 
 def searchG(searchfor):
     searchlist.append(searchfor)
@@ -38,7 +41,6 @@ subset = []
 lengthmin = 6
 searchlist = [] # the list of terms that will be generated in the rando function
 # randomly select the user agent for each search, make the useragents list as long as yout want ;)
-useragents = ['Mozilla/5.0','Bandicout Broadway 2.4','Carls Crawler Critter 1.0','Dirty Dungeon Diksearch 69','Internet Explorer but better']
 fname = 'assets/dictionary-list.html'
 with open(fname) as f:
     diction = f.readlines()
@@ -62,10 +64,14 @@ def singlerando(listofterms):
     return randomed
 
 
-numterms = int(input('Hello, how many terms to hide in addition to actual search term? (max 5) ?: '))
-rando(subset,numterms) # get total list of terms based on numterms set in the globals section above
+searchtype = int(input('Hello, are you searching by 1. domain, 2. email ?(# only): '))
+rando(subset,searchtype) # get total list of terms based on numterms set in the globals section above
 real_search = input('set search term: ') # set the search term
-if real_search == '':
-    print('Since search input blank, example running as James Campbell awesome developer')
-    real_search = 'James Campbell awesome developer'
+if (real_search == '')&(searchtype == 2):
+  print('Since search input blank, example running as james@jamescampbell.us')
+  real_search = 'james@jamescampbell.us'
+elif (real_search == '')&(searchtype == 1):
+  print('Since search blank, example running jamescampbell.us')
+  real_search = 'jamescampbell.us'
+
 searchG(real_search)
