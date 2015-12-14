@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 # mask-search-example
 # what: this example searches up to different random terms plus the term you actually want to mask what you are searching for
@@ -17,12 +16,28 @@ from useragents import *
 
 # Global Variables
 resultdata = 0
-
+emailhuntapi = 'https://api.emailhunter.co/v1/'
+authkey = 'bb0566a11bdf005001b919029deafb0d26a754d6' # replace with your own
+domain = 'jamescampbell.us'
 # Main Functions
 
 # getToday gets the date
 def getToday():
         return datetime.date.today().strftime("%Y%m%d")
+
+# get email hunter api data
+
+def emailhunt(searcheditem):
+  randomuseragent = singlerando(useragents) # select a random user agent from list
+  headers = { 'User-Agent' : randomuseragent } # get random header from above
+  url = emailhuntapi+'search?domain='+searcheditem+'&api_key='+authkey # GOOGLE ajax API string
+  print (url)
+  search_response_e = urllib.request.Request(url,None,headers)
+  search_response = urllib.request.urlopen(search_response_e)
+  search_results = search_response.read().decode("utf8")
+  resultse = json.loads(search_results)
+  print (resultse)
+  exit()
 
 
 # htmlout spits out an html report with the results of the search
@@ -103,6 +118,7 @@ elif (real_search == '')&(searchtype == 1):
 
 gogetit = searchG(real_search)
 if gogetit[0] == 1:
+  emailhunt(real_search)
   reportstyle = (input('You have results, would you like an html report? (y/n): '))
   if reportstyle == 'y':
     htmlout(real_search,gogetit[1])
