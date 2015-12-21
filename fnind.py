@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # mask-search-example
-# what: this example searches up to different random terms plus the term you actually want to mask what you are searching for
+# what: this searches emails, domains, etcetera
 # author: James Campbell
 # date: 2015-12-12
 # Note: MUST USE PYTHON 3 from terminal, e.g. python3 mask-search-example.py
